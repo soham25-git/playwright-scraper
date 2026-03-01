@@ -1,16 +1,16 @@
 const { chromium } = require("playwright");
 
 const urls = [
-  "https://sanand0.github.io/tdsdata/js_table/?seed=54",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=55",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=56",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=57",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=58",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=59",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=60",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=61",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=62",
-  "https://sanand0.github.io/tdsdata/js_table/?seed=63",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=6",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=7",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=8",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=9",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=10",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=11",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=12",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=13",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=14",
+  "https://sanand0.github.io/tdsdata/js_table/?seed=15",
 ];
 
 (async () => {
@@ -19,26 +19,28 @@ const urls = [
   let grandTotal = 0;
 
   for (const url of urls) {
+    // Go to the page and wait until the network is idle (page fully loaded)
     await page.goto(url, { waitUntil: "networkidle" });
 
-    // Wait for the table to appear
+    // Wait until a <table> tag appears on the page
     await page.waitForSelector("table");
 
-    // Grab all cell text from the table, parse as numbers, sum them
+    // Run JavaScript inside the browser to grab all table cell values and sum them
     const pageSum = await page.evaluate(() => {
       const cells = document.querySelectorAll("table td");
       let sum = 0;
       cells.forEach((cell) => {
-        const num = parseFloat(cell.innerText.trim());
-        if (!isNaN(num)) sum += num;
+        const value = parseFloat(cell.innerText.trim());
+        if (!isNaN(value)) sum += value;
       });
       return sum;
     });
 
-    console.log(`Seed ${url.split("seed=")[1]}: ${pageSum}`);
+    const seed = url.split("seed=")[1];
+    console.log(`Seed ${seed}: ${pageSum}`);
     grandTotal += pageSum;
   }
 
-  console.log(`Total sum across all pages: ${grandTotal}`);
+  console.log(`\n✅ TOTAL SUM: ${grandTotal}`);
   await browser.close();
 })();
