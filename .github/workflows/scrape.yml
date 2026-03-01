@@ -1,0 +1,29 @@
+name: Scrape Table Sums
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Lets you run it manually too
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright and dependencies
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium
+          npx playwright install-deps chromium
+
+      - name: 23f3003619@ds.study.iitm.ac.in - Run Playwright scraper
+        run: node scrape.js
